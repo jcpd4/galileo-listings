@@ -8,22 +8,111 @@
 </head>
 <body id="page-top">
 
-    <div class="container-fluid mt-4">
+    <div class="container-fluid mt-4 min-vh-100">
         <div class="row">
     
             <!-- Columna izquierda: Recomendaciones -->
-            <div class="col-lg-4 mb-4">
-                <div class="card shadow">
+            <div class="col-lg-4 mb-4 d-flex flex-column">
+                <div class="card shadow h-100">
                     <div class="card-header bg-info text-white">
                         <strong>Recomendaciones para tu listing</strong>
                     </div>
-                    <div class="card-body">
-                        <ul class="mb-0">
-                            <li><strong>Título:</strong> hasta 200 caracteres. Incluye marca + beneficio clave.</li>
-                            <li><strong>Bullets:</strong> céntrate en beneficios, no solo en características.</li>
-                            <li><strong>Descripción:</strong> cuenta una historia atractiva, incluye CTA.</li>
-                            <li><strong>Palabras clave:</strong> piensa como tu cliente buscaría el producto.</li>
+                    <!--Sustituye tu bodi card por esto-->
+
+                    <div class="card-body d-flex flex-column h-100">
+                        <!-- Menú de pestañas -->
+                        <ul class="nav nav-tabs mb-3" id="recomendacionesTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="titulo-tab" data-toggle="tab" href="#titulo" role="tab">Título</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="bullets-tab" data-toggle="tab" href="#bullets" role="tab">Bullet points</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="descripcion-tab" data-toggle="tab" href="#descripcion" role="tab">Descripción</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="keywords-tab" data-toggle="tab" href="#keywords" role="tab">Palabras clave</a>
+                            </li>
                         </ul>
+
+                        <!-- Contenido de las pestañas -->
+                        <div class="tab-content flex-grow-1" id="recomendacionesContent">
+                            <!--div del titulo-->
+                            <div class="tab-pane fade show active" id="titulo" role="tabpanel">
+                                <p><strong>Consejos para el título:</strong></p>
+                                <ul>
+                                    <li>Máximo 200 caracteres.</li>
+                                    <li>Empieza con tu marca.</li>
+                                    <li>Incluye el beneficio más importante.</li>
+                                    <li>No uses símbolos innecesarios (✔, ★, etc.).</li>
+                                </ul>
+                            
+                                <hr>
+                            
+                                <p class="mb-2"><strong>Checklist para validar el título:</strong></p>
+                                <ul id="checklist-titulo" class="list-unstyled pl-3">
+                                    <li id="check-length">⬜ Entre 180 y 200 caracteres</li>
+                                    <li id="check-packlist">⬜ Contiene la palabra <strong>PACKLIST</strong></li>
+                                    <li id="check-keywords">⬜ Contiene al menos 3 palabras clave</li>
+                                </ul>
+                            
+                                <hr>
+                            
+                                <div class="form-group">
+                                    <!--TENGO QUE CAMBIAR ESTA PARTE DEL TITULO-->
+                                    <label>Añade hasta 3 palabras clave:</label>
+                                    <div class="form-row align-items-end mb-2">
+                                        <div class="col">
+                                            <input type="text" id="input-keyword" class="form-control" placeholder="Palabra clave">
+                                        </div>
+                                        <div class="col">
+                                            <input type="number" id="input-views" class="form-control" placeholder="Visualizaciones">
+                                        </div>
+                                        <div class="col">
+                                            <input type="number" id="input-conversion" class="form-control" placeholder="%">
+                                        </div>
+                                        <div class="col-auto">
+                                            <button class="btn btn-primary" id="add-keyword">Añadir</button>
+                                        </div>
+                                    </div>
+
+                                    <div id="keywords-list"></div>
+
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="bullets" role="tabpanel">
+                                <p><strong>Consejos para los bullet points:</strong></p>
+                                <ul>
+                                    <li>Enfócate en beneficios reales.</li>
+                                    <li>Usa lenguaje claro y directo.</li>
+                                    <li>No repitas lo del título.</li>
+                                    <li>Empieza cada punto con una palabra clave si es posible.</li>
+                                </ul>
+                            </div>
+
+                            <div class="tab-pane fade" id="descripcion" role="tabpanel">
+                                <p><strong>Consejos para la descripción:</strong></p>
+                                <ul>
+                                    <li>Amplía la información del producto.</li>
+                                    <li>Crea una pequeña historia si encaja.</li>
+                                    <li>Incluye un llamado a la acción (CTA).</li>
+                                    <li>No repitas demasiado lo que ya dijiste arriba.</li>
+                                </ul>
+                            </div>
+
+                            <div class="tab-pane fade" id="keywords" role="tabpanel">
+                                <p><strong>Consejos para palabras clave:</strong></p>
+                                <ul>
+                                    <li>Ponte en el lugar del cliente: ¿cómo buscaría tu producto?</li>
+                                    <li>Incluye sinónimos relevantes.</li>
+                                    <li>No pongas palabras repetidas.</li>
+                                    <li>No uses comas, sepáralas por espacios.</li>
+                                </ul>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -146,6 +235,133 @@
     contador('descripcion', 'count-descripcion');
     contador('keywords', 'count-keywords');
 </script>
+
+<script>
+    const checklist = {
+        length: document.getElementById("check-length"),
+        packlist: document.getElementById("check-packlist"),
+        keywords: document.getElementById("check-keywords")
+    };
+
+    const inputTitulo = document.getElementById("titulo");
+    const keywordInput = document.getElementById("input-keyword");
+    const viewsInput = document.getElementById("input-views");
+    const conversionInput = document.getElementById("input-conversion");
+    const keywordList = document.getElementById("keywords-list");
+    const btnAddKeyword = document.getElementById("add-keyword");
+
+    let keywords = [];
+    // toca cambiar esto
+    inputTitulo.addEventListener("input", () => {
+        const text = inputTitulo.value.toLowerCase();
+
+        // ✅ Longitud
+        checklist.length.innerHTML = text.length >= 180 && text.length <= 200
+            ? "✅ Entre 180 y 200 caracteres"
+            : "⬜ Entre 180 y 200 caracteres";
+
+        // ✅ Contiene PACKLIST
+        checklist.packlist.innerHTML = text.includes("packlist")
+            ? "✅ Contiene la palabra PACKLIST"
+            : "⬜ Contiene la palabra PACKLIST";
+
+        // ✅ Palabras clave (contar cuántas están)
+        let matchCount = keywords.filter(p => text.includes(p.text.toLowerCase())).length;
+
+        checklist.keywords.innerHTML = matchCount >= 3
+            ? `✅ Contiene ${matchCount} de 3 palabras clave`
+            : `⬜ Contiene ${matchCount} de 3 palabras clave`;
+
+        // ✅ Cambiar color de las keywords en la lista si están incluidas
+        const keywordDivs = document.querySelectorAll("#keywords-list .keyword-row");
+        keywordDivs.forEach((div, index) => {
+            const palabra = keywords[index].text.toLowerCase();
+            if (text.includes(palabra)) {
+                div.classList.add("bg-success", "text-white");
+            } else {
+                div.classList.remove("bg-success", "text-white");
+            }
+        });
+    });
+
+
+    btnAddKeyword.addEventListener("click", () => {
+        const palabra = keywordInput.value.trim();
+        const views = viewsInput.value.trim();
+        const conversion = conversionInput.value.trim();
+
+        if (!palabra || !views || !conversion || keywords.length >= 3 || keywords.find(p => p.text === palabra)) return;
+
+        const obj = {
+            text: palabra,
+            views: parseInt(views),
+            conversion: parseFloat(conversion)
+        };
+
+        keywords.push(obj);
+        localStorage.setItem("palabrasClaveTemp", JSON.stringify(keywords));
+
+        renderKeywords();
+        keywordInput.value = "";
+        viewsInput.value = "";
+        conversionInput.value = "";
+        inputTitulo.dispatchEvent(new Event("input"));
+    });
+
+    // funcion para poder eliminar o editar palabras clave
+    function renderKeywords() {
+        keywordList.innerHTML = "";
+
+        keywords.forEach((obj, index) => {
+            const card = document.createElement("div");
+            card.className = "border rounded p-2 mb-2 keyword-row";
+
+            card.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong class="text-capitalize m-0">${obj.text}</strong>
+                        <small class="text-muted ml-2">
+                            👁️ ${obj.views} views &nbsp;&nbsp;
+                            📈 ${obj.conversion.toFixed(1)}%
+                        </small>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary mr-2" onclick="editarKeyword(${index})">✏️</button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="eliminarKeyword(${index})">❌</button>
+                    </div>
+                </div>
+            `;
+
+            keywordList.appendChild(card);
+        });
+    }
+    function eliminarKeyword(index) {
+        keywords.splice(index, 1);
+        localStorage.setItem("palabrasClaveTemp", JSON.stringify(keywords));
+        renderKeywords();
+        inputTitulo.dispatchEvent(new Event("input"));
+    }
+
+    function editarKeyword(index) {
+        const obj = keywords[index];
+        keywordInput.value = obj.text;
+        viewsInput.value = obj.views;
+        conversionInput.value = obj.conversion;
+        eliminarKeyword(index); // elimina temporal para reemplazar luego
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        const almacenadas = localStorage.getItem("palabrasClaveTemp");
+        if (almacenadas) {
+            keywords = JSON.parse(almacenadas);
+            renderKeywords();
+            inputTitulo.dispatchEvent(new Event("input"));
+        }
+    });
+
+
+</script>
+
 
 
 
