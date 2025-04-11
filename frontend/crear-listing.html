@@ -39,5 +39,35 @@
 
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('form-listing').addEventListener('submit', function (e) {
+      e.preventDefault(); // Evita recargar la página
+  
+      const titulo = document.getElementById('titulo').value;
+      const bullets = document.getElementById('bullets').value;
+      const descripcion = document.getElementById('descripcion').value;
+      const keywords = document.getElementById('keywords').value;
+  
+      const nuevoProducto = {
+        titulo,
+        bullets,
+        descripcion,
+        keywords
+      };
+  
+      // Recuperar lista anterior (si existe)
+      let productos = JSON.parse(localStorage.getItem('productos')) || [];
+  
+      // Añadir nuevo
+      productos.push(nuevoProducto);
+  
+      // Guardar en localStorage
+      localStorage.setItem('productos', JSON.stringify(productos));
+  
+      // Redirigir a "Mis productos"
+      window.location.href = 'mis-productos.html';
+    });
+</script>
+  
 </body>
 </html>

@@ -104,5 +104,43 @@
     }
   </script>
 
+<script>
+    function cargarProductos() {
+      const productos = JSON.parse(localStorage.getItem('productos')) || [];
+      const tbody = document.getElementById('bodyProductos');
+      tbody.innerHTML = '';
+  
+      productos.forEach((producto, index) => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+          <td>${producto.titulo}</td>
+          <td>${producto.bullets.replace(/\n/g, '<br>')}</td>
+          <td>${producto.descripcion}</td>
+          <td>${producto.keywords}</td>
+          <td>
+            <a href="crear-listing.html?edit=${index}" class="btn btn-primary btn-sm mr-1">
+              <i class="fas fa-edit"></i>
+            </a>
+            <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(fila);
+      });
+    }
+  
+    function eliminarProducto(index) {
+      let productos = JSON.parse(localStorage.getItem('productos')) || [];
+      productos.splice(index, 1);
+      localStorage.setItem('productos', JSON.stringify(productos));
+      cargarProductos();
+    }
+  
+    // Cargar al abrir
+    window.onload = cargarProductos;
+  </script>
+  
+
 </body>
 </html>
