@@ -11,7 +11,7 @@
 <div class="container mt-5">
   <h1 class="h3 mb-4 text-gray-800">Crear nuevo listing</h1>
 
-  <form>
+  <form id = "form-listing">
     <div class="form-group">
       <label for="titulo">Título del producto</label>
       <input type="text" class="form-control" id="titulo" placeholder="Introduce el título...">
@@ -40,34 +40,51 @@
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.getElementById('form-listing').addEventListener('submit', function (e) {
-      e.preventDefault(); // Evita recargar la página
-  
-      const titulo = document.getElementById('titulo').value;
-      const bullets = document.getElementById('bullets').value;
-      const descripcion = document.getElementById('descripcion').value;
-      const keywords = document.getElementById('keywords').value;
-  
-      const nuevoProducto = {
-        titulo,
-        bullets,
-        descripcion,
-        keywords
-      };
-  
-      // Recuperar lista anterior (si existe)
-      let productos = JSON.parse(localStorage.getItem('productos')) || [];
-  
-      // Añadir nuevo
-      productos.push(nuevoProducto);
-  
-      // Guardar en localStorage
-      localStorage.setItem('productos', JSON.stringify(productos));
-  
-      // Redirigir a "Mis productos"
-      window.location.href = 'mis-productos.html';
+    const params = new URLSearchParams(window.location.search);
+    const editIndex = params.get("edit");
+
+    const tituloInput = document.getElementById("titulo");
+    const bulletsInput = document.getElementById("bullets");
+    const descripcionInput = document.getElementById("descripcion");
+    const keywordsInput = document.getElementById("keywords");
+
+    if (editIndex !== null) {
+        const productos = JSON.parse(localStorage.getItem("productos")) || [];
+        const producto = productos[editIndex];
+
+        if (producto) {
+            tituloInput.value = producto.titulo;
+            bulletsInput.value = producto.bullets;
+            descripcionInput.value = producto.descripcion;
+            keywordsInput.value = producto.keywords;
+        }
+    }
+
+    document.getElementById("form-listing").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const nuevoProducto = {
+            titulo: tituloInput.value,
+            bullets: bulletsInput.value,
+            descripcion: descripcionInput.value,
+            keywords: keywordsInput.value
+        };
+
+        let productos = JSON.parse(localStorage.getItem("productos")) || [];
+
+        if (editIndex !== null && productos[editIndex]) {
+            productos[editIndex] = nuevoProducto;
+        } else {
+            productos.push(nuevoProducto);
+        }
+
+        localStorage.setItem("productos", JSON.stringify(productos));
+
+        // ✅ Redirección al listado de productos
+        window.location.href = "mis-productos.html";
     });
 </script>
+
   
 </body>
 </html>
