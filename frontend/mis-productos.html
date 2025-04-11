@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mis Productos</title>
+
+  <!-- Estilos de SB Admin 2 -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <!-- Incluye aquí tu sidebar -->
+    <!-- Puedes usar include, PHP, o pegar el HTML directamente -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <div id="content">
+
+        <!-- Topbar -->
+        <!-- Incluye aquí tu topbar si usas uno -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Título -->
+          <h1 class="h3 mb-4 text-gray-800">Mis productos</h1>
+
+          <!-- Botón de nuevo producto -->
+          <div class="mb-4 text-right">
+            <a href="crear-listing.html" class="btn btn-success">
+                <i class="fas fa-plus"></i> Añadir producto
+            </a>
+          </div>
+
+          <!-- Tabla de productos -->
+          <div class="card shadow mb-4">
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="tablaProductos" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Título</th>
+                      <th>Bullets</th>
+                      <th>Descripción</th>
+                      <th>Palabras clave</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bodyProductos">
+                    <!-- Aquí se insertarán productos dinámicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scripts -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="js/sb-admin-2.min.js"></script>
+
+  <!-- Script para manejar los productos -->
+  <script>
+    function nuevoProducto() {
+      const body = document.getElementById('bodyProductos');
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td><input type="text" class="form-control" placeholder="Título"></td>
+        <td><textarea class="form-control" rows="2" placeholder="Bullet points..."></textarea></td>
+        <td><textarea class="form-control" rows="2" placeholder="Descripción..."></textarea></td>
+        <td><input type="text" class="form-control" placeholder="Palabras clave"></td>
+        <td>
+            <a href="crear-listing.html" class="btn btn-primary btn-sm mr-1">
+                <i class="fas fa-edit"></i>
+            </a>
+            <button class="btn btn-danger btn-sm" onclick="eliminarFila(this)">
+                <i class="fas fa-trash"></i>
+            </button>
+        </td>
+      `;
+      body.appendChild(fila);
+    }
+
+    function eliminarFila(btn) {
+      btn.closest('tr').remove();
+    }
+  </script>
+
+</body>
+</html>
