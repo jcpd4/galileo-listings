@@ -8,35 +8,68 @@
 </head>
 <body id="page-top">
 
-<div class="container mt-5">
-  <h1 class="h3 mb-4 text-gray-800">Crear nuevo listing</h1>
-
-  <form id = "form-listing">
-    <div class="form-group">
-      <label for="titulo">Título del producto</label>
-      <input type="text" class="form-control" id="titulo" placeholder="Introduce el título...">
+    <div class="container-fluid mt-4">
+        <div class="row">
+    
+            <!-- Columna izquierda: Recomendaciones -->
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-info text-white">
+                        <strong>Recomendaciones para tu listing</strong>
+                    </div>
+                    <div class="card-body">
+                        <ul class="mb-0">
+                            <li><strong>Título:</strong> hasta 200 caracteres. Incluye marca + beneficio clave.</li>
+                            <li><strong>Bullets:</strong> céntrate en beneficios, no solo en características.</li>
+                            <li><strong>Descripción:</strong> cuenta una historia atractiva, incluye CTA.</li>
+                            <li><strong>Palabras clave:</strong> piensa como tu cliente buscaría el producto.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Columna derecha: Formulario -->
+            <div class="col-lg-8">
+                <h1 class="h3 mb-4 text-gray-800">Crear nuevo listing</h1>
+    
+                <form id="form-listing">
+                    <div class="form-group">
+                        <label for="imagen">Imagen del producto</label>
+                        <input type="file" class="form-control-file" id="imagen" accept="image/*">
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="titulo">Título del producto</label>
+                        <small class="float-right text-muted"><span id="count-titulo">0</span>/200</small>
+                        <input type="text" class="form-control" id="titulo" maxlength="200">
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="bullets">Bullet points</label>
+                        <small class="float-right text-muted"><span id="count-bullets">0</span>/500</small>
+                        <textarea class="form-control" id="bullets" rows="3" maxlength="500"></textarea>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="descripcion">Descripción</label>
+                        <small class="float-right text-muted"><span id="count-descripcion">0</span>/2000</small>
+                        <textarea class="form-control" id="descripcion" rows="4" maxlength="2000"></textarea>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="keywords">Palabras clave</label>
+                        <small class="float-right text-muted"><span id="count-keywords">0</span>/250</small>
+                        <input type="text" class="form-control" id="keywords" maxlength="250">
+                    </div>
+    
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a href="mis-productos.html" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+    
+        </div>
     </div>
-
-    <div class="form-group">
-      <label for="bullets">Bullet points</label>
-      <textarea class="form-control" id="bullets" rows="3" placeholder="• Punto 1\n• Punto 2..."></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="descripcion">Descripción</label>
-      <textarea class="form-control" id="descripcion" rows="4"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="keywords">Palabras clave</label>
-      <input type="text" class="form-control" id="keywords" placeholder="ej: planner, organizador...">
-    </div>
-
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a href="mis-productos.html" class="btn btn-secondary">Cancelar</a>
-  </form>
-</div>
-
+    
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -47,6 +80,7 @@
     const bulletsInput = document.getElementById("bullets");
     const descripcionInput = document.getElementById("descripcion");
     const keywordsInput = document.getElementById("keywords");
+    const imagenInput = document.getElementById("imagen");
 
     if (editIndex !== null) {
         const productos = JSON.parse(localStorage.getItem("productos")) || [];
@@ -57,33 +91,63 @@
             bulletsInput.value = producto.bullets;
             descripcionInput.value = producto.descripcion;
             keywordsInput.value = producto.keywords;
+            // La imagen se previsualiza en el paso siguiente si la quieres mostrar en edición
         }
     }
 
     document.getElementById("form-listing").addEventListener("submit", function (e) {
         e.preventDefault();
 
-        const nuevoProducto = {
-            titulo: tituloInput.value,
-            bullets: bulletsInput.value,
-            descripcion: descripcionInput.value,
-            keywords: keywordsInput.value
+        const reader = new FileReader();
+        const archivo = imagenInput.files[0];
+
+        reader.onloadend = function () {
+            const base64img = archivo ? reader.result : null;
+
+            const nuevoProducto = {
+                titulo: tituloInput.value,
+                bullets: bulletsInput.value,
+                descripcion: descripcionInput.value,
+                keywords: keywordsInput.value,
+                imagen: base64img
+            };
+
+            let productos = JSON.parse(localStorage.getItem("productos")) || [];
+
+            if (editIndex !== null && productos[editIndex]) {
+                productos[editIndex] = nuevoProducto;
+            } else {
+                productos.push(nuevoProducto);
+            }
+
+            localStorage.setItem("productos", JSON.stringify(productos));
+            window.location.href = "mis-productos.html";
         };
 
-        let productos = JSON.parse(localStorage.getItem("productos")) || [];
-
-        if (editIndex !== null && productos[editIndex]) {
-            productos[editIndex] = nuevoProducto;
+        if (archivo) {
+            reader.readAsDataURL(archivo);
         } else {
-            productos.push(nuevoProducto);
+            reader.onloadend(); // No hay imagen, guarda sin ella
         }
-
-        localStorage.setItem("productos", JSON.stringify(productos));
-
-        // ✅ Redirección al listado de productos
-        window.location.href = "mis-productos.html";
     });
 </script>
+
+<script>
+    function contador(idCampo, idContador) {
+        const campo = document.getElementById(idCampo);
+        const contador = document.getElementById(idContador);
+        campo.addEventListener('input', () => {
+            contador.textContent = campo.value.length;
+        });
+    }
+
+    contador('titulo', 'count-titulo');
+    contador('bullets', 'count-bullets');
+    contador('descripcion', 'count-descripcion');
+    contador('keywords', 'count-keywords');
+</script>
+
+
 
   
 </body>
