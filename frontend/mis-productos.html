@@ -1,110 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Productos</title>
-
-  <!-- Estilos de SB Admin 2 -->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+<body class="bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">Mis Productos</h1>
+      <a href="crear-listings-palabras-clave.html" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors">
+        <i class="fas fa-plus mr-2"></i>Añadir producto
+      </a>
+    </div>
 
-<body id="page-top">
-
-  <!-- Page Wrapper -->
-  <div id="wrapper">
-
-    <!-- Sidebar -->
-    <!-- Incluye aquí tu sidebar -->
-    <!-- Puedes usar include, PHP, o pegar el HTML directamente -->
-
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-      <div id="content">
-
-        <!-- Topbar -->
-        <!-- Incluye aquí tu topbar si usas uno -->
-
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
-
-          <!-- Título -->
-          <h1 class="h3 mb-4 text-gray-800">Mis productos</h1>
-
-          <!-- Botón de nuevo producto -->
-          <div class="mb-4 text-right">
-            <a href="crear-listing.html" class="btn btn-success">
-                <i class="fas fa-plus"></i> Añadir producto
-            </a>
-          </div>
-
-          <!-- Tabla de productos -->
-          <div class="card shadow mb-4">
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-bordered" id="tablaProductos" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>Título</th>
-                      <th>Bullets</th>
-                      <th>Descripción</th>
-                      <th>Palabras clave</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody id="bodyProductos">
-                    <!-- Aquí se insertarán productos dinámicamente -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <!-- /.container-fluid -->
-
+    <!-- Products Table -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Título</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bullets</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Palabras clave</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="bodyProductos" class="bg-white divide-y divide-gray-200">
+            <!-- Products will be loaded here -->
+          </tbody>
+        </table>
       </div>
     </div>
-    <!-- End of Content Wrapper -->
-
   </div>
-  <!-- End of Page Wrapper -->
 
-  <!-- Scripts -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="js/sb-admin-2.min.js"></script>
-
-  <!-- Script para manejar los productos -->
   <script>
-    function nuevoProducto() {
-      const body = document.getElementById('bodyProductos');
-      const fila = document.createElement('tr');
-      fila.innerHTML = `
-        <td><input type="text" class="form-control" placeholder="Título"></td>
-        <td><textarea class="form-control" rows="2" placeholder="Bullet points..."></textarea></td>
-        <td><textarea class="form-control" rows="2" placeholder="Descripción..."></textarea></td>
-        <td><input type="text" class="form-control" placeholder="Palabras clave"></td>
-        <td>
-            <a href="crear-listing.html" class="btn btn-primary btn-sm mr-1">
-                <i class="fas fa-edit"></i>
-            </a>
-            <button class="btn btn-danger btn-sm" onclick="eliminarFila(this)">
-                <i class="fas fa-trash"></i>
-            </button>
-        </td>
-      `;
-      body.appendChild(fila);
-    }
-
-    function eliminarFila(btn) {
-      btn.closest('tr').remove();
-    }
-  </script>
-
-<script>
     function cargarProductos() {
       const productos = JSON.parse(localStorage.getItem('productos')) || [];
       const tbody = document.getElementById('bodyProductos');
@@ -112,39 +46,63 @@
   
       productos.forEach((producto, index) => {
         const fila = document.createElement('tr');
+        fila.className = "hover:bg-gray-50";
+        // aqui
         fila.innerHTML = `
-            <td>
-                ${producto.imagen ? `<img src="${producto.imagen}" alt="Imagen" width="80" class="img-thumbnail mb-2"><br>` : ''}
-                ${producto.titulo}
-            </td>
-            <td>${producto.bullets.replace(/\n/g, '<br>')}</td>
-            <td>${producto.descripcion}</td>
-            <td>${producto.keywords}</td>
-            <td>
-                <a href="crear-listing.html?edit=${index}" class="btn btn-primary btn-sm mr-1">
-                    <i class="fas fa-edit"></i>
-                </a>
-                <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-        `;
+          <td class="px-6 py-4 whitespace-normal text-sm text-gray-900">
+              ${producto.imagen ? `<img src="${producto.imagen}" alt="Imagen" class="w-20 h-20 object-cover rounded-md mb-2">` : ''}
+              <span>
+                  ${producto.titulo && producto.titulo.length > 300
+                      ? producto.titulo.slice(0, 300) + '... <em>(ver completo en Editar)</em>'
+                      : producto.titulo || ''
+                  }
+              </span>
+          </td>
+          <td class="px-6 py-4 whitespace-normal text-sm text-gray-500">
+              ${producto.bullets && producto.bullets.length > 300
+                  ? producto.bullets.slice(0, 300).replace(/\n/g, '<br>') + '... <em>(ver completo en Editar)</em>'
+                  : (producto.bullets || '').replace(/\n/g, '<br>')
+              }
+          </td>
+          <td class="px-6 py-4 whitespace-normal text-sm text-gray-500">
+              ${producto.descripcion && producto.descripcion.length > 300
+                  ? producto.descripcion.slice(0, 300) + '... <em>(ver completo en Editar)</em>'
+                  : producto.descripcion || ''
+              }
+          </td>
+          <td class="px-6 py-4 whitespace-normal text-sm text-gray-500">
+              ${producto.keywords && producto.keywords.length > 300
+                  ? producto.keywords.slice(0, 300) + '... <em>(ver completo en Editar)</em>'
+                  : producto.keywords || ''
+              }
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <div class="flex space-x-2">
+                  <a href="crear-listing.html?edit=${index}" class="text-blue-600 hover:text-blue-900">
+                      <i class="fas fa-edit"></i>
+                  </a>
+                  <button onclick="eliminarProducto(${index})" class="text-red-600 hover:text-red-900">
+                      <i class="fas fa-trash"></i>
+                  </button>
+              </div>
+          </td>
+      `;
 
         tbody.appendChild(fila);
       });
     }
   
     function eliminarProducto(index) {
-      let productos = JSON.parse(localStorage.getItem('productos')) || [];
-      productos.splice(index, 1);
-      localStorage.setItem('productos', JSON.stringify(productos));
-      cargarProductos();
+      if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+        let productos = JSON.parse(localStorage.getItem('productos')) || [];
+        productos.splice(index, 1);
+        localStorage.setItem('productos', JSON.stringify(productos));
+        cargarProductos();
+      }
     }
   
     // Cargar al abrir
     window.onload = cargarProductos;
   </script>
-  
-
 </body>
 </html>

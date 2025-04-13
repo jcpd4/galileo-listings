@@ -30,8 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchTermsTags = document.getElementById('searchTermsTags');
     const showOnlyUsedKeywords = document.getElementById('showOnlyUsedKeywords');
     const saveTemplateBtn = document.getElementById('saveTemplateBtn');
-    const saveTemplateModal = new bootstrap.Modal(document.getElementById('saveTemplateModal'));
-    const confirmSaveTemplate = document.getElementById('confirmSaveTemplate');
     const exportReportBtn = document.getElementById('exportReportBtn');
     const importKeywordsBtn = document.getElementById('importKeywordsBtn');
    
@@ -51,10 +49,10 @@ document.addEventListener('DOMContentLoaded', function() {
     addBulletBtn.addEventListener('click', addBulletPoint);
     productDescription.addEventListener('input', updateDescriptionPreview);
     showOnlyUsedKeywords.addEventListener('change', renderKeywords);
-    saveTemplateBtn.addEventListener('click', () => saveTemplateModal.show());
-    confirmSaveTemplate.addEventListener('click', saveTemplate);
     exportReportBtn.addEventListener('click', exportReport);
     importKeywordsBtn.addEventListener('click', importKeywords);
+    saveTemplateBtn.addEventListener('click', saveTemplate);
+
    
     // Configurar event listeners para bullet points existentes
     document.addEventListener('click', function(e) {
@@ -555,36 +553,37 @@ document.addEventListener('DOMContentLoaded', function() {
        
         optimizationSummary.innerHTML = content || '<p class="text-muted">Completa los campos para ver el análisis</p>';
     }
-   
+    // saveTemplate
     function saveTemplate() {
-        const templateName = document.getElementById('templateName').value.trim();
-        if (!templateName) {
-            alert('Por favor ingresa un nombre para la plantilla');
+        const title = document.getElementById('productTitle').value.trim();
+        const bullets = Array.from(document.querySelectorAll('.bullet-text')).map(el => el.value).join('\n');
+        const description = document.getElementById('productDescription').value.trim();
+        const keywords = Array.from(document.querySelectorAll('.search-term-field')).map(el => el.value).join(', ');
+    
+        if (!title && !bullets && !description && !keywords) {
+            alert("Debes completar al menos un campo para guardar el producto.");
             return;
         }
-       
-        const includeTitle = document.getElementById('includeTitle').checked;
-        const includeBullets = document.getElementById('includeBullets').checked;
-        const includeDescription = document.getElementById('includeDescription').checked;
-        const includeSearchTerms = document.getElementById('includeSearchTerms').checked;
-       
-        const template = {
-            name: templateName,
-            title: includeTitle ? productTitle.value : '',
-            bullets: includeBullets ? Array.from(document.querySelectorAll('.bullet-text')).map(el => el.value) : [],
-            description: includeDescription ? productDescription.value : '',
-            searchTerms: includeSearchTerms ? Array.from(document.querySelectorAll('.search-term-field')).map(el => el.value) : []
+    
+        const nuevoProducto = {
+            id: Date.now(),
+            titulo: title,
+            bullets: bullets,
+            descripcion: description,
+            keywords: keywords,
+            creado: new Date().toLocaleString()
         };
-       
-        templates.push(template);
-        saveTemplateModal.hide();
-       
-        // Mostrar notificación
-        alert(`Plantilla "${templateName}" guardada correctamente.`);
-       
-        // Limpiar campos del modal
-        document.getElementById('templateName').value = '';
+    
+        const productosGuardados = JSON.parse(localStorage.getItem('productos')) || [];
+        productosGuardados.push(nuevoProducto);
+        localStorage.setItem('productos', JSON.stringify(productosGuardados));
+    
+        // Redirige directamente sin modal ni alert
+        window.location.href = 'mis-productos.html';
     }
+    
+    
+    
    
     function exportReport() {
         const report = {
