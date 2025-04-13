@@ -857,7 +857,7 @@ document.getElementById('fetchAsinBtn').addEventListener('click', async () => {
         // Descripción
         const descInput = document.getElementById('productDescription');
         descInput.value = data.description || '';
-        descInput.dispatchEvent(new Event('input')); // 👈 actualiza la vista previa
+        descInput.dispatchEvent(new Event('input')); // 👈 actualiza la vista previa 
 
 
         // Cierra el modal
