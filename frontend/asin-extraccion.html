@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extractor de información de Amazon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .description-content {
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .description-content strong {
+            font-weight: bold;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+    <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Extractor de información de Amazon</h1>
+        
+        <!-- Formulario -->
+        <div class="mb-6">
+            <label for="marketplace" class="block text-sm font-medium text-gray-700 mb-1">Mercado de Amazon:</label>
+            <select id="marketplace" class="w-full p-2 border border-gray-300 rounded-md">
+                <option value="es">Amazon.es (España)</option>
+                <option value="com">Amazon.com (EE.UU.)</option>
+                <option value="co.uk">Amazon.co.uk (Reino Unido)</option>
+                <option value="de">Amazon.de (Alemania)</option>
+                <option value="fr">Amazon.fr (Francia)</option>
+                <option value="it">Amazon.it (Italia)</option>
+                <option value="ca">Amazon.ca (Canadá)</option>
+                <option value="com.mx">Amazon.com.mx (México)</option>
+                <option value="com.br">Amazon.com.br (Brasil)</option>
+                <option value="in">Amazon.in (India)</option>
+                <option value="jp">Amazon.co.jp (Japón)</option>
+                <option value="au">Amazon.com.au (Australia)</option>
+            </select>
+        </div>
+        
+        <div class="mb-6">
+            <label for="asin" class="block text-sm font-medium text-gray-700 mb-1">ASIN del producto:</label>
+            <input type="text" id="asin" placeholder="Ej: B08N5KWB9H" class="w-full p-2 border border-gray-300 rounded-md">
+        </div>
+        
+        <button id="fetchBtn" class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+            <svg id="btn-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+            </svg>
+            <span>Obtener información</span>
+        </button>
+
+        <!-- Loading -->
+        <div id="loading" class="mt-4 hidden text-gray-700 flex items-center gap-2">
+            <span class="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full"></span>
+            Cargando información...
+        </div>
+
+        <!-- Error -->
+        <div id="error" class="mt-4 p-3 bg-red-50 text-red-600 rounded-md hidden"></div>
+
+        <!-- Resultados -->
+        <div id="result" class="mt-8 hidden space-y-6">
+            <h2 class="text-xl font-semibold text-gray-800 border-b pb-2">Información del producto</h2>
+            
+            <!-- Título -->
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Título:</label>
+                <div id="title" class="text-lg font-medium text-gray-900"></div>
+            </div>
+
+            <!-- Bullets (individuales) -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Características principales:</label>
+                <div id="bullet1" class="p-3 bg-gray-50 rounded-md border border-gray-200"></div>
+                <div id="bullet2" class="p-3 bg-gray-50 rounded-md border border-gray-200"></div>
+                <div id="bullet3" class="p-3 bg-gray-50 rounded-md border border-gray-200"></div>
+                <div id="bullet4" class="p-3 bg-gray-50 rounded-md border border-gray-200"></div>
+                <div id="bullet5" class="p-3 bg-gray-50 rounded-md border border-gray-200"></div>
+            </div>
+            
+            <!-- Descripción -->
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Descripción:</label>
+                <div id="description" class="description-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const fetchBtn = document.getElementById('fetchBtn');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const errorEl = document.getElementById('error');
+        const btnIcon = document.getElementById('btn-icon');
+
+        fetchBtn.addEventListener('click', async () => {
+            const marketplace = document.getElementById('marketplace').value;
+            const asin = document.getElementById('asin').value.trim();
+
+            if (!asin) {
+                showError('Por favor ingresa un ASIN válido');
+                return;
+            }
+
+            loading.classList.remove('hidden');
+            result.classList.add('hidden');
+            errorEl.classList.add('hidden');
+
+            try {
+                const res = await fetch(`http://localhost:3000/api/asin?asin=${asin}&marketplace=${marketplace}`);
+                const data = await res.json();
+
+                if (data.error) throw new Error(data.error);
+
+                // Título
+                document.getElementById('title').textContent = data.title || 'No encontrado';
+
+                // Bullets
+                const bullets = data.bullets || [];
+                for (let i = 1; i <= 5; i++) {
+                    const bulletEl = document.getElementById(`bullet${i}`);
+                    bulletEl.textContent = bullets[i - 1] ? `${i}. ${bullets[i - 1]}` : '';
+                    bulletEl.style.display = bullets[i - 1] ? 'block' : 'none';
+                }
+
+                // Descripción
+                const descriptionEl = document.getElementById('description');
+                if (data.description) {
+                    let formattedDesc = data.description
+                        .replace(/\n/g, '<br>')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/<b>(.*?)<\/b>/g, '<strong>$1</strong>');
+                    descriptionEl.innerHTML = formattedDesc;
+                } else {
+                    descriptionEl.textContent = 'No encontrado';
+                }
+
+                result.classList.remove('hidden');
+            } catch (err) {
+                console.error(err);
+                showError('Error al obtener la información del producto: ' + err.message);
+            } finally {
+                loading.classList.add('hidden');
+            }
+        });
+
+        function showError(message) {
+            errorEl.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1 -mt-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+                ${message}
+            `;
+            errorEl.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

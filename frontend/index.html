@@ -85,6 +85,7 @@
                         <a class="collapse-item" href="plantillas.html">Plantillas guardadas</a>
                         <a class="collapse-item" href="estadisticas.html">Estadísticas</a>
                         <a class="collapse-item" href="crear-listings-palabras-clave.html">Crear listing</a>
+                        <a class="collapse-item" href="asin-extraccion.html">Extracción de asin</a>
                     </div>
                 </div>
             </li>
@@ -382,6 +383,60 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <!-- Extractor de ASIN -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Extractor de información de Amazon</h6>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <label for="marketplace">Marketplace</label>
+                                <select class="form-control" id="marketplace">
+                                    <option value="es">Amazon.es (España)</option>
+                                    <option value="com">Amazon.com (EE.UU.)</option>
+                                    <!-- Agrega más si necesitas -->
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="asin">ASIN</label>
+                                <input type="text" class="form-control" id="asin" placeholder="Ej: B08N5KWB9H">
+                            </div>
+
+                            <button id="fetchBtn" class="btn btn-primary mb-3">Obtener información</button>
+
+                            <div id="loading" class="text-info mb-2" style="display: none;">Cargando...</div>
+                            <div id="error" class="text-danger mb-2" style="display: none;"></div>
+
+                            <hr>
+
+                            <div id="result" style="display: none;">
+                                <div class="form-group">
+                                    <label>Título:</label>
+                                    <div id="title" class="form-control bg-light"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Bullets:</label>
+                                    <ul id="bullets" class="list-group">
+                                        <li id="bullet1" class="list-group-item"></li>
+                                        <li id="bullet2" class="list-group-item"></li>
+                                        <li id="bullet3" class="list-group-item"></li>
+                                        <li id="bullet4" class="list-group-item"></li>
+                                        <li id="bullet5" class="list-group-item"></li>
+                                    </ul>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Descripción:</label>
+                                    <div id="description" class="form-control bg-light" style="white-space: pre-wrap;"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -771,6 +826,58 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('fetchBtn').addEventListener('click', async () => {
+                const marketplace = document.getElementById('marketplace').value;
+                const asin = document.getElementById('asin').value.trim();
+                const loading = document.getElementById('loading');
+                const result = document.getElementById('result');
+                const error = document.getElementById('error');
+
+                console.log('Botón clicado con ASIN:', asin, 'Marketplace:', marketplace);
+
+                if (!asin) {
+                    error.textContent = 'Por favor, ingresa un ASIN válido.';
+                    error.style.display = 'block';
+                    return;
+                }
+
+                loading.style.display = 'block';
+                result.style.display = 'none';
+                error.style.display = 'none';
+
+                try {
+                    const response = await fetch(`http://localhost:3000/api/asin?asin=${asin}&marketplace=${marketplace}`);
+                    const data = await response.json();
+
+                    if (data.error) throw new Error(data.error);
+
+                    document.getElementById('title').textContent = data.title || 'No encontrado';
+                    const bullets = data.bullets || [];
+                    for (let i = 1; i <= 5; i++) {
+                        const el = document.getElementById(`bullet${i}`);
+                        el.textContent = bullets[i - 1] || '';
+                    }
+                    document.getElementById('description').textContent = data.description || 'No encontrado';
+
+                    localStorage.setItem('amazonData', JSON.stringify(data));
+                    result.style.display = 'block';
+                } catch (err) {
+                    console.error(err);
+                    error.textContent = 'Error al obtener la información del producto.';
+                    error.style.display = 'block';
+                } finally {
+                    loading.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+    
+    
+    
 
 </body>
 
