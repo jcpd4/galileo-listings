@@ -253,26 +253,26 @@
     let keywords = [];
     // toca cambiar esto
     inputTitulo.addEventListener("input", () => {
-        const text = inputTitulo.value.toLowerCase();
+        const text = inputTitulo.value.toLowerCase();   
 
-        // ✅ Longitud
+        // Longitud entre 180 y 200
         checklist.length.innerHTML = text.length >= 180 && text.length <= 200
             ? "✅ Entre 180 y 200 caracteres"
             : "⬜ Entre 180 y 200 caracteres";
 
-        // ✅ Contiene PACKLIST
+        // Contiene la palabra PACKLIST
         checklist.packlist.innerHTML = text.includes("packlist")
             ? "✅ Contiene la palabra PACKLIST"
             : "⬜ Contiene la palabra PACKLIST";
 
-        // ✅ Palabras clave (contar cuántas están)
+        // Contar palabras clave coincidentes
         let matchCount = keywords.filter(p => text.includes(p.text.toLowerCase())).length;
 
-        checklist.keywords.innerHTML = matchCount >= 3
+        checklist.keywords.innerHTML = matchCount === 3
             ? `✅ Contiene ${matchCount} de 3 palabras clave`
             : `⬜ Contiene ${matchCount} de 3 palabras clave`;
 
-        // ✅ Cambiar color de las keywords en la lista si están incluidas
+        // Colorear keywords activas en verde
         const keywordDivs = document.querySelectorAll("#keywords-list .keyword-row");
         keywordDivs.forEach((div, index) => {
             const palabra = keywords[index].text.toLowerCase();
@@ -283,6 +283,7 @@
             }
         });
     });
+
 
 
     btnAddKeyword.addEventListener("click", () => {
