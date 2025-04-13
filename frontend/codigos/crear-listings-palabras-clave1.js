@@ -808,3 +808,64 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTitleAnalysis();
     addBulletPoint(); // Añadir un bullet point inicial
 });
+
+document.getElementById('fetchAsinBtn').addEventListener('click', async () => {
+    const asin = document.getElementById('asinInput').value.trim();
+    const marketplace = document.getElementById('marketplaceSelect').value;
+    const errorBox = document.getElementById('asinError');
+
+    errorBox.classList.add('d-none');
+    if (!asin) {
+        errorBox.textContent = "Por favor introduce un ASIN válido.";
+        errorBox.classList.remove('d-none');
+        return;
+    }
+
+    try {
+        const res = await fetch(`http://localhost:3000/api/asin?asin=${asin}&marketplace=${marketplace}`);
+        const data = await res.json();
+
+        if (data.error) throw new Error(data.error);
+
+        // Título
+        const titleInput = document.getElementById('productTitle');
+        titleInput.value = data.title || '';
+        titleInput.dispatchEvent(new Event('input')); // 👈 activa la checklist del título
+
+
+        // Bullet points
+        const bullets = data.bullets || [];
+        const container = document.getElementById('bulletsContainer');
+        container.innerHTML = '';
+        bullets.forEach(bullet => {
+            const div = document.createElement('div');
+            div.className = 'bullet-point mb-3';
+            div.innerHTML = `
+                <textarea class="form-control bullet-text" rows="2">${bullet}</textarea>
+                <div class="mt-2 d-flex justify-content-between">
+                    <small class="text-muted">Caracteres: <span class="bullet-char-count">${bullet.length}</span>/500</small>
+                    <button class="btn btn-sm btn-outline-danger remove-bullet">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>`;
+            container.appendChild(div);
+        
+            const textarea = div.querySelector('.bullet-text');
+            textarea.dispatchEvent(new Event('input')); // ✅ actualiza el análisis
+        });
+
+        // Descripción
+        const descInput = document.getElementById('productDescription');
+        descInput.value = data.description || '';
+        descInput.dispatchEvent(new Event('input')); // 👈 actualiza la vista previa
+
+
+        // Cierra el modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('asinModal'));
+        modal.hide();
+    } catch (err) {
+        console.error(err);
+        errorBox.textContent = "No se pudo extraer la información del producto.";
+        errorBox.classList.remove('d-none');
+    }
+});
