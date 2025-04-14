@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const apiKey = "TU_API_KEY_AQUI"; // ← pon tu API key aquí
+    const apiKey = "AIzaSyCuK35Z9AB4C2pgBkdJadl-EUmXK8MHJWY"; // ← pon tu API key aquí
     const abrirModalBtn = document.getElementById("generateTitleBtn");
     const modalKeywordList = document.getElementById("modalKeywordList");
     const confirmarGeneracionBtn = document.getElementById("confirmarGeneracionBtn");
@@ -47,6 +47,7 @@ Cumple las siguientes reglas:
 - Profesional y atractivo para SEO
 - No repitas palabras innecesariamente
 - Termina con una frase que impacte y convierta
+- Tienes que devolver solo que te pido, no información extra
 
 Ejemplo: PACKLIST® Invitaciones de Cumpleaños – 12 Invitaciones con Diseño de Gorila para tu Fiesta – Invitaciones Originales y Divertidas para Cumpleaños Infantiles, Fiestas Temáticas y Eventos`;
 
@@ -54,7 +55,8 @@ Ejemplo: PACKLIST® Invitaciones de Cumpleaños – 12 Invitaciones con Diseño 
         confirmarGeneracionBtn.disabled = true;
 
         try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro:generateContent?key=${apiKey}`, {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+                                     
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
