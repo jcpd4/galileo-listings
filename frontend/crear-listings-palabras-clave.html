@@ -336,6 +336,26 @@
                     <option value="baja">Baja</option>
                   </select>
                 </div>
+                <div class="mb-3 px-2">
+                    <label class="form-label">¿Qué quieres generar?</label>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="generarTitulo" checked>
+                      <label class="form-check-label" for="generarTitulo">Título</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="generarBullets">
+                      <label class="form-check-label" for="generarBullets">Bullet Points</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="generarDescripcion">
+                      <label class="form-check-label" for="generarDescripcion">Descripción</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="generarBackend">
+                      <label class="form-check-label" for="generarBackend">Palabras para backend</label>
+                    </div>
+                </div>
+                  
               </div>
       
               <div class="mb-3">
@@ -343,10 +363,17 @@
                 <div id="modalKeywordList" class="d-flex flex-wrap gap-2"></div>
               </div>
             </div>
-            <div class="modal-footer">
-              <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button class="btn btn-success" id="confirmarGeneracionBtn">Generar título ahora</button>
+            <div class="form-check mb-3 px-3">
+                <input class="form-check-input me-2" type="checkbox" id="generarBullets">
+                <label class="form-check-label" for="generarBullets">También generar Bullet Points</label>
             </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" id="confirmarGeneracionBtn">
+                    <i class="fas fa-magic me-1"></i> Generar contenido con IA
+                </button>
+            </div>            
           </div>
         </div>
       </div>
