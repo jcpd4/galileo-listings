@@ -1,0 +1,49 @@
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.loading-spinner {
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 3px solid #3b82f6;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.table-header {
+    position: sticky;
+    top: 0;
+    background-color: #f8fafc;
+    z-index: 10;
+}
+.keyword-cell {
+    min-width: 200px;
+}
+.scrollable-table {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.sortable-header {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.sortable-header:hover {
+    background-color: #f1f5f9;
+}
+.sort-icon {
+    margin-left: 5px;
+    opacity: 0.5;
+}
+.sort-icon.active {
+    opacity: 1;
+    color: #3b82f6;
+}
