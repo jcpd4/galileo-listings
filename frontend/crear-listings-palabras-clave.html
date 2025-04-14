@@ -244,6 +244,12 @@
                            </div>
                            <div id="keywordsList"></div>
                        </div>
+                       <!--Botón para la ia-->
+                       <div class="text-end mt-3">
+                            <button class="btn btn-success" id="generateTitleBtn">
+                                <i class="fas fa-magic me-1"></i> Generar título con IA
+                            </button>
+                        </div>
                    </div>
                </div>
               
@@ -304,12 +310,54 @@
             </div>
         </div>
     </div>
-
+    <!--Ia area-->
+    <div class="modal fade" id="modalGenerarTitulo" tabindex="-1" aria-labelledby="modalTituloLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+              <h5 class="modal-title" id="modalTituloLabel">Generar título con IA</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">Intencionalidad</label>
+                  <select id="selectIntencion" class="form-select">
+                    <option value="informativo">Informativo</option>
+                    <option value="persuasivo">Persuasivo</option>
+                    <option value="emocional">Emocional</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Energía</label>
+                  <select id="selectEnergia" class="form-select">
+                    <option value="alta">Alta</option>
+                    <option value="media">Media</option>
+                    <option value="baja">Baja</option>
+                  </select>
+                </div>
+              </div>
+      
+              <div class="mb-3">
+                <label class="form-label">Selecciona hasta 3 palabras clave:</label>
+                <div id="modalKeywordList" class="d-flex flex-wrap gap-2"></div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button class="btn btn-success" id="confirmarGeneracionBtn">Generar título ahora</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
    
 
 
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
    <!--Primer scrip-->
    <script src="codigos/crear-listings-palabras-clave1.js"></script>
+   <!--Para generar Titulos con ia-->
+   <script src="codigos/generar-titulo-ia.js"></script>
 </body>
 </html>
